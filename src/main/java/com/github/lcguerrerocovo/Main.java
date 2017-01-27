@@ -1,8 +1,6 @@
 package com.github.lcguerrerocovo;
 
-import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
 
