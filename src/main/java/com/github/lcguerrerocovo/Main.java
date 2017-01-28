@@ -56,7 +56,7 @@ public class Main {
         System.out.println(cache.get(4));
           */
 
-        long startTime = System.nanoTime();
+        /*long startTime = System.nanoTime();
 
         LRUCache cache = new LRUCache(10);
         cache.put(10,13);
@@ -169,7 +169,12 @@ public class Main {
         cache.put(13,28);
         cache.put(11,26);
         long endTime = System.nanoTime();
-        System.out.println("    time spent in execution:" + (endTime - startTime));
+        System.out.println("    time spent in execution:" + (endTime - startTime));*/
+
+        findMedianSortedArrays(new int[]{1,5,6,9,12,15,17},new int[]{3,8,10,14,16,20,21});
+
+        double result = findMedianSortedArrays(new int[]{1,2,3,4,5,6,7},new int[]{8,9,10,11,12,13,14});
+        System.out.println("result="+result);
 
 
 
@@ -274,6 +279,51 @@ public class Main {
         System.out.println(p1.toString());
         System.out.println(p2.toString());
     }
+
+    public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int index = (nums1.length/2);
+        int m1 = nums1[index];
+        int m2 = nums2[index];
+        boolean even = ((nums1.length + nums2.length) % 2 == 0);
+        if(m1 < m2) {
+            return findMedianSortedArrays(nums1,nums2,index,index,m1,m2,0,even);
+        }  else {
+            return findMedianSortedArrays(nums2,nums1,index,index,m2,m1,0,even);
+        }
+    }
+
+    public static double findMedianSortedArrays(int[] nums1, int[] nums2, int index1, int index2, int m1, int m2, int swap, boolean even) {
+        int first = index1 + index2;
+        int second = (nums1.length - index1 - 1) + (nums2.length - index2 - 1);
+        if (first == second && m1 >= m2) {
+            if(even) return (m1 + m2)/ 2d;
+            else return m1;
+        } else {
+            if (swap % 2 == 1) {
+                if(index1 == nums1.length-1) {
+                    int size = (index1)+(nums2.length-1);
+                    return nums2[(size/2)-index1];
+                } else {
+                    index2 = search(nums2, m1);
+                    return findMedianSortedArrays(nums1, nums2, index1, index2, m1, nums2[index2], swap + 1,even);
+                }
+            } else {
+                index1 = search(nums1, m2);
+                return findMedianSortedArrays(nums1, nums2, index1, index2, nums1[index1], m2, swap + 1,even);
+            }
+        }
+    }
+
+    protected static int search(int [] array, int pivot) {
+        int result =  Arrays.binarySearch(array, pivot);
+        if(result == -1) return 0;
+        else if (result > 0) return result;
+        else {
+            return Math.abs(result) - 2;
+        }
+    }
+
+
 
 }
 
