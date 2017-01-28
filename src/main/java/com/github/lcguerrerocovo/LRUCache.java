@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by luisguerrero on 1/27/17.
+ * See <a href="https://leetcode.com/problems/lru-cache/">lrucache problem in leetcode</a>
+ * need to make this more efficient to pass leetcode's online judge
  */
-class LRUCache {
+public class LRUCache {
 
-    Map<Integer,Integer> map;
-    Queue queue;
+    protected Map<Integer,Integer> map;
+    protected Queue queue;
     int capacity;
 
     public LRUCache(int capacity) {
@@ -30,9 +31,7 @@ class LRUCache {
     }
 
     public void put(int key, int value) {
-
         //long startTime = System.nanoTime();
-
         int keyToRemove = queue.add(key);
         if (keyToRemove != -1 && keyToRemove != key) map.remove(keyToRemove);
         map.put(key, value);
@@ -40,20 +39,14 @@ class LRUCache {
         //System.out.println("    time spent in put():" + (endTime - startTime));
     }
 
-    /*
-    public void put(int key, int value) {
 
-        //System.out.println("size:" + map.size());
-    } */
-
-
-    /*public String toString() {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         for(Map.Entry<Integer,Integer> keyValue : map.entrySet()) {
             builder.append("(k:" + keyValue.getKey() + " v:" + keyValue.getValue() + ")");
         }
         return "cache: " + builder.toString() + " queue:" + queue.toString();
-    } */
+    }
 
     class Queue {
 
@@ -90,7 +83,7 @@ class LRUCache {
 
                     add(new Node(key));
                     if (currentSize == capacity) {
-                        lruRemove();
+                        return lruRemove();
                     }
                 }
             }
@@ -124,14 +117,29 @@ class LRUCache {
             }
         }
 
-        public void lruRemove() {
+        public int lruRemove() {
+            int keyToRemove = -1;
             if(last != null && last != head) {
+                keyToRemove = last.key;
                 last = last.next();
                 last.setPrev(null);
             }
+            return keyToRemove;
         }
 
-        /*public String toString() {
+        public int size() {
+            Node curr = head;
+            int size = 0;
+            if(curr != null) {
+                for (int i = 1; curr != null && curr.hasPrev(); i++) {
+                    curr = curr.prev();
+                    size = i + 1;
+                }
+            }
+            return size;
+        }
+
+        public String toString() {
             StringBuilder builder = new StringBuilder();
             Node curr = head;
             if(curr != null) {
@@ -144,7 +152,7 @@ class LRUCache {
                 builder.append("tail");
             }
             return builder.toString();
-        } */
+        }
 
         class Node {
 
