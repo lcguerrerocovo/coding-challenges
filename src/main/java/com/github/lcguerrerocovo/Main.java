@@ -281,23 +281,24 @@ public class Main {
     }
 
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int index = (nums1.length/2);
-        int m1 = nums1[index];
-        int m2 = nums2[index];
+        int index1 = (nums1.length/2);
+        int index2 = (nums2.length/2);
+        int m1 = nums1[index1];
+        int m2 = nums2[index2];
         boolean even = ((nums1.length + nums2.length) % 2 == 0);
-        if(m1 < m2) {
-            return findMedianSortedArrays(nums1,nums2,index,index,m1,m2,0,even);
+        if(nums1.length < nums2.length) {
+            return findMedianSortedArrays(nums1,nums2,index1,index2,m1,m2,0,even);
         }  else {
-            return findMedianSortedArrays(nums2,nums1,index,index,m2,m1,0,even);
+            return findMedianSortedArrays(nums2,nums1,index1,index2,m2,m1,0,even);
         }
     }
 
     public static double findMedianSortedArrays(int[] nums1, int[] nums2, int index1, int index2, int m1, int m2, int swap, boolean even) {
         int first = index1 + index2;
         int second = (nums1.length - index1 - 1) + (nums2.length - index2 - 1);
-        if (first == second && m1 >= m2) {
+        if (Math.abs(second-first) <= 1 && m1 >= m2) {
             if(even) return (m1 + m2)/ 2d;
-            else return m1;
+            else return Math.min(m1,m2);
         } else {
             if (swap % 2 == 1) {
                 if(index1 == nums1.length-1) {
@@ -317,7 +318,7 @@ public class Main {
     protected static int search(int [] array, int pivot) {
         int result =  Arrays.binarySearch(array, pivot);
         if(result == -1) return 0;
-        else if (result > 0) return result;
+        else if (result >= 0) return result;
         else {
             return Math.abs(result) - 2;
         }
