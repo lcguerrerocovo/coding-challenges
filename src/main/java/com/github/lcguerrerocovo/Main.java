@@ -172,10 +172,10 @@ public class Main {
         long endTime = System.nanoTime();
         System.out.println("    time spent in execution:" + (endTime - startTime));*/
 
-        findMedianSortedArrays(new int[]{1,5,6,9,12,15,17},new int[]{3,8,10,14,16,20,21});
+        //findMedianSortedArrays(new int[]{1,5,6,9,12,15,17},new int[]{3,8,10,14,16,20,21});
 
-        double result = findMedianSortedArrays(new int[]{1,2,3,4,5,6,7},new int[]{8,9,10,11,12,13,14});
-        System.out.println("result="+result);
+        //double result = findMedianSortedArrays(new int[]{1,2,3,4,5,6,7},new int[]{8,9,10,11,12,13,14});
+        //System.out.println("result="+result);
 
 
 
@@ -279,110 +279,6 @@ public class Main {
         Point.trickySwap(p1,p2);
         System.out.println(p1.toString());
         System.out.println(p2.toString());
-    }
-
-    public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int index1 = (nums1.length/2);
-        int index2 = (nums2.length/2);
-        if(nums1.length == 0) {
-            return singleArrayMedian(nums2,0);
-        } else if(nums2.length == 0) {
-            return singleArrayMedian(nums1,0);
-        }
-        if(nums1[index1] < nums2[index2]) {
-            return findMedianSortedArrays(nums1,nums2,index1,index2,false);
-        }  else {
-            return findMedianSortedArrays(nums2,nums1,index2,index1,false);
-        }
-
-    }
-
-    private static double singleArrayMedian(int[] array, int offset) {
-        int index = ((array.length + offset)/2) - offset;
-        if((array.length+offset) % 2 == 0) {
-            return (array[index - 1] + array[index])/2d;
-        } else {
-            return array[index];
-        }
-    }
-
-    public static double findMedianSortedArrays(int[] xarr, int[] yarr, int xk, int yl, boolean stable) {
-        if(stable) {
-            if(xk == xarr.length-1 && yl == 0) {
-                if(xarr.length-1 == yarr.length-1) return singleArrayMedian(new int[]{xarr[xk],yarr[yl]},0);
-                else if(xarr.length-1 < yarr.length-1) return singleArrayMedian(yarr,(xarr.length));
-                else if(xarr.length-1 > yarr.length-1) return singleArrayMedian(xarr,-(yarr.length));
-            }
-            return median(xarr,yarr,xk,yl,stable);
-        } else {
-            int m1 = xarr[xk];
-            int m2 = yarr[yl];
-            xk = search(xarr, yarr[yl], 1);
-            yl = search(yarr, xarr[xk], 2);
-            if (xarr[xk] == m1 && yarr[yl] == m2) stable = true;
-            return findMedianSortedArrays(xarr, yarr, xk, yl, stable);
-        }
-    }
-
-
-    protected static double median(int[] xarr, int[] yarr, int xk, int yl, boolean stable) {
-        //validateRange(xarr,xk);
-        //validateRange(yarr,yl);
-        int ltMedian = xk + yl;
-        int gtMedian = (xarr.length - xk - 1) + (yarr.length - yl - 1);
-        if (/*(xk + 1 <= xarr.length - 1 && yarr[yl] <= xarr[xk + 1])
-                && (yl - 1 >= 0 && xarr[xk] >= yarr[yl - 1])
-                && Math.abs(gtMedian-ltMedian) <= 2
-                && xarr[xk] < yarr[yl]*/stable) {
-            int[] s = (ltMedian <= gtMedian) ? new int[]{ltMedian,1} : new int[]{gtMedian,-1};
-
-            List<Double> medianList = new ArrayList<>((s[1] == 1) ?
-                    Arrays.asList((double)xarr[xk],(double)yarr[yl])
-                    : Arrays.asList((double)yarr[yl],(double)xarr[xk]));
-            medianList = medianList(xarr,yarr,xk,yl,s[0],s[1],medianList);
-            if(medianList.size() > 1)
-                medianList = medianList.stream().map(n -> n/2).collect(Collectors.toList());
-            return medianList.stream().reduce(0.0, Double::sum);
-        }
-        return -1;
-    }
-
-    protected static List<Double> medianList(int[] xarr, int[] yarr, int xk, int yl, int s,int direction, List<Double> medianList) {
-        int size = xarr.length + yarr.length;
-        int medianListSize = ((int) Math.ceil((size)/2d) + ((size+1) % 2)) -  s;
-        if(medianList.size() >= medianListSize) {
-            medianListSize = medianList.size();
-            int fromIndex = medianListSize - ((size+1) % 2) - 1;
-            return medianList.subList(fromIndex,medianListSize);
-        } else {
-            if((direction > 0) ?
-                    getWithOffset(xarr,xk,direction) <= getWithOffset(yarr,yl,direction) :
-                    getWithOffset(xarr,xk,direction) >= getWithOffset(yarr,yl,direction)) {
-                medianList.add((double) getWithOffset(xarr,xk,direction));
-                return medianList(xarr, yarr, xk+direction,yl,s,direction,medianList);
-            } else {
-                medianList.add((double) getWithOffset(yarr,yl,direction));
-                return medianList(xarr, yarr, xk, yl+direction,s,direction,medianList);
-            }
-        }
-    }
-
-    private static int getWithOffset(int[] arr, int index, int offset) {
-        if (index+offset < 0) {
-            return (int) Double.NEGATIVE_INFINITY;
-        } else if(index+offset >= arr.length) {
-            return (int) Double.POSITIVE_INFINITY;
-        } else return arr[index+offset];
-    }
-
-    protected static int search(int[] array, int pivot, int firstOrSecond) {
-        int result =  Arrays.binarySearch(array, pivot);
-        if(result == -1) return 0;
-        else if (result >= 0) return result;
-        else {
-            if(firstOrSecond == 1) return Math.abs(result) - 2;
-            return Math.abs(result) - 1;
-        }
     }
 
 
