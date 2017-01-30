@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by luisguerrero on 1/30/17.
+ * Created by luisguerrero
  */
 public class SortedArrays {
 
@@ -14,11 +14,12 @@ public class SortedArrays {
     private int[] yarr;
     private int xk;
     private int yl;
-    private int sizex;
-    private int sizey;
     private double median;
 
     SortedArrays(int[] xarr,int[] yarr) {
+        this.xarr = xarr;
+        this.yarr = yarr;
+
         if(xarr.length == 0) {
             median = singleArrayMedian(yarr,0);
         } else if(yarr.length == 0) {
@@ -26,12 +27,9 @@ public class SortedArrays {
         } else {
             int xk = (xarr.length/2);
             int yl = (yarr.length/2);
-            if(xarr[xk] < yarr[yl]) {
-                this.xarr = xarr;
-                this.yarr = yarr;
-                this.xk = xk;
-                this.yl = yl;
-            } else {
+            this.xk = xk;
+            this.yl = yl;
+            if(xarr[xk] >= yarr[yl]) {
                 this.yarr = xarr;
                 this.xarr = yarr;
                 this.xk = yl;
