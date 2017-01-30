@@ -298,7 +298,7 @@ public class Main {
     }
 
     private static double singleArrayMedian(int[] array, int offset) {
-        int index = (array.length)/2 + offset;
+        int index = ((array.length + offset)/2) - offset;
         if((array.length+offset) % 2 == 0) {
             return (array[index - 1] + array[index])/2d;
         } else {
@@ -310,8 +310,8 @@ public class Main {
         if(stable) {
             if(xk == xarr.length-1 && yl == 0) {
                 if(xarr.length-1 == yarr.length-1) return singleArrayMedian(new int[]{xarr[xk],yarr[yl]},0);
-                else if(xarr.length-1 < yarr.length-1) return singleArrayMedian(yarr,-(xarr.length));
-                else if(xarr.length-1 > yarr.length-1) return singleArrayMedian(xarr,(yarr.length));
+                else if(xarr.length-1 < yarr.length-1) return singleArrayMedian(yarr,(xarr.length));
+                else if(xarr.length-1 > yarr.length-1) return singleArrayMedian(xarr,-(yarr.length));
             }
             return median(xarr,yarr,xk,yl,stable);
         } else {
@@ -325,7 +325,7 @@ public class Main {
     }
 
 
-    protected static int median(int[] xarr, int[] yarr, int xk, int yl, boolean stable) {
+    protected static double median(int[] xarr, int[] yarr, int xk, int yl, boolean stable) {
         //validateRange(xarr,xk);
         //validateRange(yarr,yl);
         int ltMedian = xk + yl;
@@ -336,16 +336,18 @@ public class Main {
                 && xarr[xk] < yarr[yl]*/stable) {
             int[] s = (ltMedian <= gtMedian) ? new int[]{ltMedian,1} : new int[]{gtMedian,-1};
 
-            List<Integer> medianList = new ArrayList<>((s[1] == 1) ? Arrays.asList(xarr[xk],yarr[yl]) : Arrays.asList(yarr[yl],xarr[xk]));
+            List<Double> medianList = new ArrayList<>((s[1] == 1) ?
+                    Arrays.asList((double)xarr[xk],(double)yarr[yl])
+                    : Arrays.asList((double)yarr[yl],(double)xarr[xk]));
             medianList = medianList(xarr,yarr,xk,yl,s[0],s[1],medianList);
             if(medianList.size() > 1)
-                medianList = medianList.stream().map(n -> n/2).collect(Collectors.toList());;
-            return medianList.stream().mapToInt(Integer::intValue).sum();
+                medianList = medianList.stream().map(n -> n/2).collect(Collectors.toList());
+            return medianList.stream().reduce(0.0, Double::sum);
         }
         return -1;
     }
 
-    protected static List<Integer> medianList(int[] xarr, int[] yarr, int xk, int yl, int s,int direction, List<Integer> medianList) {
+    protected static List<Double> medianList(int[] xarr, int[] yarr, int xk, int yl, int s,int direction, List<Double> medianList) {
         int size = xarr.length + yarr.length;
         int medianListSize = ((int) Math.ceil((size)/2d) + ((size+1) % 2)) -  s;
         if(medianList.size() >= medianListSize) {
@@ -353,22 +355,24 @@ public class Main {
             int fromIndex = medianListSize - ((size+1) % 2) - 1;
             return medianList.subList(fromIndex,medianListSize);
         } else {
-            if((direction == 1)
-                    ? (xarr[xk+direction] <= yarr[yl+direction]) :
-                    (xarr[xk+direction] >= yarr[yl+direction])) {
-                medianList.add(xarr[xk+direction]);
+            if((direction > 0) ?
+                    getWithOffset(xarr,xk,direction) <= getWithOffset(yarr,yl,direction) :
+                    getWithOffset(xarr,xk,direction) >= getWithOffset(yarr,yl,direction)) {
+                medianList.add((double) getWithOffset(xarr,xk,direction));
                 return medianList(xarr, yarr, xk+direction,yl,s,direction,medianList);
             } else {
-                medianList.add(yarr[yl+direction]);
+                medianList.add((double) getWithOffset(yarr,yl,direction));
                 return medianList(xarr, yarr, xk, yl+direction,s,direction,medianList);
             }
         }
     }
 
-    private static void validateRange(int[] arr, int index) {
-        if (index < 0 || index > arr.length-1) {
-            throw new IllegalArgumentException("index out of array range");
-        }
+    private static int getWithOffset(int[] arr, int index, int offset) {
+        if (index+offset < 0) {
+            return (int) Double.NEGATIVE_INFINITY;
+        } else if(index+offset >= arr.length) {
+            return (int) Double.POSITIVE_INFINITY;
+        } else return arr[index+offset];
     }
 
     protected static int search(int[] array, int pivot, int firstOrSecond) {
