@@ -55,7 +55,7 @@ public class SortedArrays {
                 else if(xarr.length-1 < yarr.length-1) return singleArrayMedian(yarr,(xarr.length));
                 else if(xarr.length-1 > yarr.length-1) return singleArrayMedian(xarr,-(yarr.length));
             }
-            return median(xarr,yarr,xk,yl,stable);
+            return median(stable);
         } else {
             int m1 = xarr[xk];
             int m2 = yarr[yl];
@@ -75,7 +75,7 @@ public class SortedArrays {
         }
     }
 
-    protected double median(int[] xarr, int[] yarr, int xk, int yl, boolean stable) {
+    protected double median(boolean stable) {
         int ltMedian = xk + yl;
         int gtMedian = (xarr.length - xk - 1) + (yarr.length - yl - 1);
         if (stable) {
@@ -84,7 +84,7 @@ public class SortedArrays {
             List<Double> medianList = new ArrayList<>((s[1] == 1) ?
                     Arrays.asList((double)xarr[xk],(double)yarr[yl])
                     : Arrays.asList((double)yarr[yl],(double)xarr[xk]));
-            medianList = medianList(xarr,yarr,xk,yl,s[0],s[1],medianList);
+            medianList = medianList(xk,yl,s[0],s[1],medianList);
             if(medianList.size() > 1)
                 medianList = medianList.stream().map(n -> n/2).collect(Collectors.toList());
             return medianList.stream().reduce(0.0, Double::sum);
@@ -92,7 +92,7 @@ public class SortedArrays {
         return -1;
     }
 
-    protected List<Double> medianList(int[] xarr, int[] yarr, int xk, int yl, int s,int direction, List<Double> medianList) {
+    protected List<Double> medianList(int xk, int yl, int s,int direction, List<Double> medianList) {
         int size = xarr.length + yarr.length;
         int medianListSize = ((int) Math.ceil((size)/2d) + ((size+1) % 2)) -  s;
         if(medianList.size() >= medianListSize) {
@@ -104,10 +104,10 @@ public class SortedArrays {
                     getWithOffset(xarr,xk,direction) <= getWithOffset(yarr,yl,direction) :
                     getWithOffset(xarr,xk,direction) >= getWithOffset(yarr,yl,direction)) {
                 medianList.add((double) getWithOffset(xarr,xk,direction));
-                return medianList(xarr, yarr, xk+direction,yl,s,direction,medianList);
+                return medianList(xk+direction,yl,s,direction,medianList);
             } else {
                 medianList.add((double) getWithOffset(yarr,yl,direction));
-                return medianList(xarr, yarr, xk, yl+direction,s,direction,medianList);
+                return medianList(xk, yl+direction,s,direction,medianList);
             }
         }
     }
@@ -129,4 +129,6 @@ public class SortedArrays {
             return Math.abs(result) - 1;
         }
     }
+
+
 }
