@@ -152,6 +152,24 @@ public class Main {
         System.out.println(p2.toString());
     }
 
+    public static int countRopes(int K, int[] A) {
+        int ropes = 0;
+        int sumOfTiedRopes = 0;
+        for(int element: A) {
+            if(element >= K) {
+                sumOfTiedRopes = 0;
+                ++ropes;
+            }
+            else {
+                if(sumOfTiedRopes + element >= K) {
+                    sumOfTiedRopes = 0;
+                    ++ropes;
+                }
+                else sumOfTiedRopes += element;
+            }
+        }
+        return ropes;
+    }
 
 
 }
