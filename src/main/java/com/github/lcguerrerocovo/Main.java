@@ -9,11 +9,11 @@ public class Main {
 
         System.out.println(anagramChecker("eaosir", "roseia"));
 
-        xorSwap(45,67);
+        xorSwap(45, 67);
 
         Fibonacci fib = new Fibonacci();
 
-        for(int i=0; i< 10; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("n=" + i);
             System.out.println("fib iter=" + fibonacci(i));
             System.out.println("fib recu=" + fib.nth(i));
@@ -30,7 +30,7 @@ public class Main {
 
         swappingFail();
 
-        System.out.println(hammingDistance(2147483647,0)); // should print '31'
+        System.out.println(hammingDistance(2147483647, 0)); // should print '31'
         System.out.println(findComplement(5)); // should print '2'
         System.out.println(Arrays.toString(countBits(8)));
 
@@ -45,9 +45,8 @@ public class Main {
         System.out.println(cache.get(3));       // returns 3
         System.out.println(cache.get(4));
 
-        SortedArrays arrays = new SortedArrays(new int[]{1,5,6,9,12,15,17},new int[]{3,8,10,14,16,20,21});
-        System.out.println("median="+arrays.findMedian());
-
+        SortedArrays arrays = new SortedArrays(new int[]{1, 5, 6, 9, 12, 15, 17}, new int[]{3, 8, 10, 14, 16, 20, 21});
+        System.out.println("median=" + arrays.findMedian());
 
 
     }
@@ -60,7 +59,7 @@ public class Main {
         }
 
         boolean isAnagram = false;
-        if(sum == 0) isAnagram = true;
+        if (sum == 0) isAnagram = true;
 
         return isAnagram;
     }
@@ -75,8 +74,8 @@ public class Main {
 
     private static int fibonacci(int n) {
         int result = 0;
-        if(n > 0 && n < 3) result = 1;
-        else if(n >= 3) {
+        if (n > 0 && n < 3) result = 1;
+        else if (n >= 3) {
             int prev = 1;
             result = 1;
             for (int i = 2; i < n; i++) {
@@ -90,37 +89,37 @@ public class Main {
     }
 
     public static int hammingDistance(int x, int y) {
-        int[] a = intToBinary(x,new int[]{});
-        int[] b = intToBinary(y,new int[]{});
+        int[] a = intToBinary(x, new int[]{});
+        int[] b = intToBinary(y, new int[]{});
 
-        if(a.length > b.length) return getDistance(a,b,0);
-        else return getDistance(b,a,0);
+        if (a.length > b.length) return getDistance(a, b, 0);
+        else return getDistance(b, a, 0);
     }
 
     private static int getDistance(int[] a, int[] b, int distance) {
-        for(int i=0; i < a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             int bValue = 0;
-            if(i < b.length) bValue = b[i];
-            if(a[i] != bValue) ++distance;
+            if (i < b.length) bValue = b[i];
+            if (a[i] != bValue) ++distance;
         }
         return distance;
     }
 
-    private static int[] intToBinary(int decimal, int [] binaryArr) {
-        if(decimal > 0) {
-            int[] newArr = Arrays.copyOf(binaryArr,binaryArr.length+1);
-            newArr[newArr.length-1] = (decimal % 2);
+    private static int[] intToBinary(int decimal, int[] binaryArr) {
+        if (decimal > 0) {
+            int[] newArr = Arrays.copyOf(binaryArr, binaryArr.length + 1);
+            newArr[newArr.length - 1] = (decimal % 2);
             return intToBinary(decimal / 2, newArr);
-        }  else return binaryArr;
+        } else return binaryArr;
     }
 
     public static int findComplement(int num) {
-        int[] a = intToBinary(num,new int[]{});
+        int[] a = intToBinary(num, new int[]{});
 
         int decimal = 1;
         int result = 0;
 
-        for(int i=0; i < a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             a[i] ^= 1;
             result += decimal * a[i];
             decimal *= 2;
@@ -130,7 +129,7 @@ public class Main {
     }
 
     public static int[] countBits(int num) {
-        int[] arr = new int[num+1];
+        int[] arr = new int[num + 1];
         int power = 1;
         for (int i = 1; i <= num; i++) {
             if (i > 1 && (i % power) == 0)
@@ -141,13 +140,13 @@ public class Main {
     }
 
     private static void swappingFail() {
-        Point p1 = new Point(0,0);
-        Point p2 = new Point(0,0);
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(0, 0);
 
         System.out.println(p1.toString());
         System.out.println(p2.toString());
         System.out.println(" ");
-        Point.trickySwap(p1,p2);
+        Point.trickySwap(p1, p2);
         System.out.println(p1.toString());
         System.out.println(p2.toString());
     }
@@ -155,17 +154,15 @@ public class Main {
     public static int countRopes(int K, int[] A) {
         int ropes = 0;
         int sumOfTiedRopes = 0;
-        for(int element: A) {
-            if(element >= K) {
+        for (int element : A) {
+            if (element >= K) {
                 sumOfTiedRopes = 0;
                 ++ropes;
-            }
-            else {
-                if(sumOfTiedRopes + element >= K) {
+            } else {
+                if (sumOfTiedRopes + element >= K) {
                     sumOfTiedRopes = 0;
                     ++ropes;
-                }
-                else sumOfTiedRopes += element;
+                } else sumOfTiedRopes += element;
             }
         }
         return ropes;
@@ -173,12 +170,12 @@ public class Main {
 
     public static int overlapping(int[] A, int[] B) {
         int count = 0;
-        if(A.length > 0) {
+        if (A.length > 0) {
             int currB = B[0];
-            for (int i = 0; i < B.length-1; i++) {
-                if (currB < A[i+1]) {
+            for (int i = 0; i < B.length - 1; i++) {
+                if (currB < A[i + 1]) {
                     count++;
-                    currB = B[i+1];
+                    currB = B[i + 1];
                 }
             }
             count++;
@@ -186,9 +183,26 @@ public class Main {
         return count;
     }
 
-
+    public static void rotate(int[] nums, int k) {
+        k = k % nums.length;
+        if (nums.length > 0 && k > 0) {
+            int[] temp = new int[k];
+            for (int i = 0, j = nums.length - k; i < nums.length; i++, j++) {
+                if (i < k) {
+                    temp[i] = nums[i];
+                    nums[i] = nums[j];
+                    if (i == k - 1) j = -1;
+                } else if (i >= k && i < nums.length - k) {
+                    int swap = nums[i];
+                    nums[i] = temp[j % k];
+                    temp[j % k] = swap;
+                } else {
+                    nums[i] = temp[j % k];
+                }
+            }
+        }
+    }
 }
-
 
 
 
