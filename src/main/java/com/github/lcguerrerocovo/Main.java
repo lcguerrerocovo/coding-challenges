@@ -171,6 +171,21 @@ public class Main {
         return ropes;
     }
 
+    public static int overlapping(int[] A, int[] B) {
+        int count = 0;
+        if(A.length > 0) {
+            int currB = B[0];
+            for (int i = 0; i < B.length-1; i++) {
+                if (currB < A[i+1]) {
+                    count++;
+                    currB = B[i+1];
+                }
+            }
+            count++;
+        }
+        return count;
+    }
+
 
 }
 
