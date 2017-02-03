@@ -1,7 +1,6 @@
 package com.github.lcguerrerocovo;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public class Main {
 
@@ -47,7 +46,6 @@ public class Main {
 
         SortedArrays arrays = new SortedArrays(new int[]{1, 5, 6, 9, 12, 15, 17}, new int[]{3, 8, 10, 14, 16, 20, 21});
         System.out.println("median=" + arrays.findMedian());
-
 
     }
 
@@ -202,6 +200,7 @@ public class Main {
             }
         }
     }
+
 }
 
 
